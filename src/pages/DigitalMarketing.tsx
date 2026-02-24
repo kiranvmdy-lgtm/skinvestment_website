@@ -1,5 +1,6 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import {
     Globe,
@@ -15,6 +16,10 @@ import {
     Zap,
     Target,
     TrendingUp,
+    Shield,
+    FileCheck,
+    Wallet,
+    Home,
 } from "lucide-react";
 
 const DigitalMarketing = () => {
@@ -77,6 +82,14 @@ const DigitalMarketing = () => {
         },
     ];
 
+    const serviceNav = [
+        { name: "Insurance", href: "/services", icon: Shield, active: false },
+        { name: "Personal Loan", href: "/personal-loan", icon: Wallet, active: false },
+        { name: "Home Loan", href: "/home-loan", icon: Home, active: false },
+        { name: "Digital Marketing", href: "/digital-marketing", icon: Megaphone, active: true },
+        { name: "Auditing & Tax", href: "/auditing-tax", icon: FileCheck, active: false },
+    ];
+
     const stats = [
         { value: "150+", label: "Projects Delivered" },
         { value: "3x", label: "Average ROI" },
@@ -112,7 +125,7 @@ const DigitalMarketing = () => {
             <Header />
             <main>
                 {/* Hero */}
-                <section className="pt-28 pb-16 md:pt-36 md:pb-20 relative overflow-hidden bg-gradient-to-br from-[#1a1a2e] via-[#16213e] to-[#0f3460] text-white">
+                <section className="pt-28 pb-8 md:pt-36 md:pb-10 relative overflow-hidden bg-gradient-to-br from-[#1a1a2e] via-[#16213e] to-[#0f3460] text-white">
                     <div className="absolute inset-0 overflow-hidden">
                         <div className="absolute -top-40 -right-40 w-[500px] h-[500px] rounded-full bg-purple-500/10 blur-3xl" />
                         <div className="absolute -bottom-40 -left-40 w-[400px] h-[400px] rounded-full bg-blue-500/10 blur-3xl" />
@@ -143,7 +156,7 @@ const DigitalMarketing = () => {
                             data-driven strategies that grow your brand, drive traffic, and
                             generate leads.
                         </p>
-                        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                        <div className="flex flex-col sm:flex-row gap-4 justify-center mb-10">
                             <a href="/#contact">
                                 <Button
                                     size="lg"
@@ -162,6 +175,28 @@ const DigitalMarketing = () => {
                                     View Services
                                 </Button>
                             </a>
+                        </div>
+
+                        {/* Service Navigation Tabs */}
+                        <div className="flex flex-wrap justify-center gap-3 md:gap-4">
+                            {serviceNav.map((tab) => (
+                                <Link
+                                    key={tab.name}
+                                    to={tab.href}
+                                    onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+                                    className={`
+                                        inline-flex items-center gap-2.5 px-6 py-3 md:px-8 md:py-3.5 rounded-full text-base md:text-lg font-semibold
+                                        transition-all duration-300 border-2
+                                        ${tab.active
+                                            ? "bg-white text-[#1a1a2e] border-white shadow-lg shadow-white/25 scale-105"
+                                            : "bg-white/10 text-white border-white/30 hover:bg-white/20 hover:border-white/50 hover:scale-105"
+                                        }
+                                    `}
+                                >
+                                    <tab.icon className="w-4 h-4 md:w-5 md:h-5" />
+                                    {tab.name}
+                                </Link>
+                            ))}
                         </div>
                     </div>
                 </section>

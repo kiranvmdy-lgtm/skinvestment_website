@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Menu, X, Phone } from "lucide-react";
 import logo from "@/assets/logo.png";
+import LanguageSelector from "./LanguageSelector";
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navLinks = [{
@@ -17,12 +18,6 @@ const Header = () => {
   }, {
     name: "Services",
     href: "/services"
-  }, {
-    name: "Digital Marketing",
-    href: "/digital-marketing"
-  }, {
-    name: "Auditing & Tax",
-    href: "/auditing-tax"
   }, {
     name: "Contact",
     href: "/contact"
@@ -50,7 +45,7 @@ const Header = () => {
         {/* Desktop Navigation */}
         <nav className="hidden xl:flex items-center gap-0.5">
           {navLinks.map(link => (
-            <Link key={link.name} to={link.href} onClick={handleClick} className="px-2.5 py-2 text-[13px] font-medium text-muted-foreground hover:text-primary transition-colors rounded-lg hover:bg-muted whitespace-nowrap">
+            <Link key={link.name} to={link.href} onClick={handleClick} className="px-2.5 py-2 text-[15px] font-medium text-muted-foreground hover:text-primary transition-colors rounded-lg hover:bg-muted whitespace-nowrap">
               {link.name}
             </Link>
           ))}
@@ -58,6 +53,7 @@ const Header = () => {
 
         {/* Desktop CTA */}
         <div className="hidden xl:flex items-center gap-3">
+          <LanguageSelector />
           <a href="tel:+916364825402" className="flex items-center gap-2 text-sm font-medium text-foreground hover:text-primary transition-colors">
             <Phone className="w-4 h-4" />
             <span>+916364825402</span>
@@ -85,6 +81,7 @@ const Header = () => {
           ))}
         </nav>
         <div className="mt-4 pt-4 border-t border-border flex flex-col gap-3 px-4">
+          <LanguageSelector />
           <a href="tel:+916364825402" className="flex items-center gap-2 text-sm font-medium text-foreground">
             <Phone className="w-4 h-4 text-primary" />
             <span>+916364825402</span>

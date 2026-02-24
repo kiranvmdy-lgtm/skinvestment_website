@@ -13,8 +13,11 @@ import ContactPage from "./pages/ContactPage";
 import NewsPage from "./pages/NewsPage";
 import MediaPage from "./pages/MediaPage";
 import AuditingTaxPage from "./pages/AuditingTaxPage";
+import PersonalLoanPage from "./pages/PersonalLoanPage";
+import HomeLoanPage from "./pages/HomeLoanPage";
 import NotFound from "./pages/NotFound";
 import FixedCTA from "./components/FixedCTA";
+import AngelChatbot from "./components/AngelChatbot";
 import SplashScreen from "./components/SplashScreen";
 
 const queryClient = new QueryClient();
@@ -34,7 +37,7 @@ const App = () => {
         <Toaster />
         <Sonner />
         {showSplash && <SplashScreen onFinish={handleSplashFinish} />}
-        <BrowserRouter basename="/sk-family-trust-web">
+        <BrowserRouter basename="/skinvestment_website">
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/about" element={<AboutPage />} />
@@ -47,10 +50,13 @@ const App = () => {
             <Route path="/news" element={<NewsPage />} />
             <Route path="/media" element={<MediaPage />} />
             <Route path="/auditing-tax" element={<AuditingTaxPage />} />
+            <Route path="/personal-loan" element={<PersonalLoanPage />} />
+            <Route path="/home-loan" element={<HomeLoanPage />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
           <FixedCTA />
+          <AngelChatbot />
         </BrowserRouter>
       </TooltipProvider>
     </QueryClientProvider>

@@ -1,5 +1,6 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import {
     FileText,
@@ -14,6 +15,11 @@ import {
     Users,
     Clock,
     Award,
+    Shield,
+    Megaphone,
+    FileCheck,
+    Wallet,
+    Home,
 } from "lucide-react";
 
 const AuditingTaxPage = () => {
@@ -110,6 +116,14 @@ const AuditingTaxPage = () => {
         },
     ];
 
+    const serviceNav = [
+        { name: "Insurance", href: "/services", icon: Shield, active: false },
+        { name: "Personal Loan", href: "/personal-loan", icon: Wallet, active: false },
+        { name: "Home Loan", href: "/home-loan", icon: Home, active: false },
+        { name: "Digital Marketing", href: "/digital-marketing", icon: Megaphone, active: false },
+        { name: "Auditing & Tax", href: "/auditing-tax", icon: FileCheck, active: true },
+    ];
+
     const highlights = [
         {
             icon: Users,
@@ -167,7 +181,7 @@ const AuditingTaxPage = () => {
             <Header />
             <main>
                 {/* Hero */}
-                <section className="pt-28 pb-16 md:pt-36 md:pb-20 bg-gradient-to-br from-primary via-primary to-primary-dark text-primary-foreground relative overflow-hidden">
+                <section className="pt-28 pb-8 md:pt-36 md:pb-10 bg-gradient-to-br from-primary via-primary to-primary-dark text-primary-foreground relative overflow-hidden">
                     <div className="absolute inset-0 overflow-hidden">
                         <div className="absolute -top-40 -right-40 w-80 h-80 rounded-full bg-primary-foreground/5 blur-3xl" />
                         <div className="absolute -bottom-40 -left-40 w-96 h-96 rounded-full bg-primary-foreground/5 blur-3xl" />
@@ -186,11 +200,33 @@ const AuditingTaxPage = () => {
                         <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
                             Auditing & Tax Consultations
                         </h1>
-                        <p className="text-primary-foreground/80 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed">
+                        <p className="text-primary-foreground/80 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed mb-10">
                             Expert auditing & taxation services to keep your finances
                             compliant, optimised, and stress-free — for individuals and
                             businesses alike.
                         </p>
+
+                        {/* Service Navigation Tabs */}
+                        <div className="flex flex-wrap justify-center gap-3 md:gap-4">
+                            {serviceNav.map((tab) => (
+                                <Link
+                                    key={tab.name}
+                                    to={tab.href}
+                                    onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+                                    className={`
+                                        inline-flex items-center gap-2.5 px-6 py-3 md:px-8 md:py-3.5 rounded-full text-base md:text-lg font-semibold
+                                        transition-all duration-300 border-2
+                                        ${tab.active
+                                            ? "bg-primary-foreground text-primary border-primary-foreground shadow-lg shadow-primary-foreground/25 scale-105"
+                                            : "bg-primary-foreground/10 text-primary-foreground border-primary-foreground/30 hover:bg-primary-foreground/20 hover:border-primary-foreground/50 hover:scale-105"
+                                        }
+                                    `}
+                                >
+                                    <tab.icon className="w-4 h-4 md:w-5 md:h-5" />
+                                    {tab.name}
+                                </Link>
+                            ))}
+                        </div>
                     </div>
                 </section>
 

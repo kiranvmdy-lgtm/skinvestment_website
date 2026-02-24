@@ -1,7 +1,8 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Shield, HeartPulse, Building2, TrendingUp, Wallet, Home, Plane, Car, ArrowRight, CheckCircle2 } from "lucide-react";
+import { Shield, HeartPulse, Building2, TrendingUp, Wallet, Home, Plane, Car, Briefcase, ArrowRight, CheckCircle2, Megaphone, FileCheck } from "lucide-react";
 
 const ServicesPage = () => {
     const services = [
@@ -34,20 +35,6 @@ const ServicesPage = () => {
             details: ["SIP Plans", "Equity Funds", "Debt Funds", "Hybrid Funds", "Tax Saving (ELSS)", "Goal Planning"],
         },
         {
-            icon: Wallet,
-            title: "Personal Loans",
-            description: "Fast assistance for affordable loan options. Get quick approvals and competitive rates for your financial needs.",
-            color: "secondary",
-            details: ["Quick Approval", "Low Interest Rates", "Minimal Documentation", "Flexible Tenure", "No Collateral", "Online Process"],
-        },
-        {
-            icon: Home,
-            title: "Home Loans",
-            description: "Make your dream home a reality with competitive home loan options. We help you find the best rates and guide you through the entire process.",
-            color: "accent",
-            details: ["Competitive Rates", "Long Tenure", "Balance Transfer", "Top-Up Loans", "Pre-Approved Offers", "Quick Processing"],
-        },
-        {
             icon: Plane,
             title: "Travel Insurance",
             description: "Travel worry-free with comprehensive travel insurance. Get coverage for medical emergencies, trip cancellations, lost baggage, and more — for domestic and international trips.",
@@ -61,6 +48,21 @@ const ServicesPage = () => {
             color: "accent",
             details: ["Two-Wheeler Insurance", "Four-Wheeler Insurance", "Commercial Vehicle", "Third-Party Cover", "Comprehensive Plans", "Instant Renewal"],
         },
+        {
+            icon: Briefcase,
+            title: "Business Insurance for Life",
+            description: "Safeguard your business against unforeseen risks with tailored commercial insurance solutions. From property to liability — we've got you covered.",
+            color: "secondary",
+            details: [],
+        },
+    ];
+
+    const serviceNav = [
+        { name: "Insurance", href: "/services", icon: Shield, active: true },
+        { name: "Personal Loan", href: "/personal-loan", icon: Wallet, active: false },
+        { name: "Home Loan", href: "/home-loan", icon: Home, active: false },
+        { name: "Digital Marketing", href: "/digital-marketing", icon: Megaphone, active: false },
+        { name: "Auditing & Tax", href: "/auditing-tax", icon: FileCheck, active: false },
     ];
 
     const getColorClasses = (color: string) => {
@@ -77,7 +79,7 @@ const ServicesPage = () => {
             <Header />
             <main>
                 {/* Hero */}
-                <section className="pt-28 pb-16 md:pt-36 md:pb-20 bg-gradient-to-br from-primary via-primary to-primary-dark text-primary-foreground relative overflow-hidden">
+                <section className="pt-28 pb-8 md:pt-36 md:pb-10 bg-gradient-to-br from-primary via-primary to-primary-dark text-primary-foreground relative overflow-hidden">
                     <div className="absolute inset-0 overflow-hidden">
                         <div className="absolute -top-40 -right-40 w-80 h-80 rounded-full bg-primary-foreground/5 blur-3xl" />
                         <div className="absolute -bottom-40 -left-40 w-96 h-96 rounded-full bg-primary-foreground/5 blur-3xl" />
@@ -90,9 +92,31 @@ const ServicesPage = () => {
                         <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
                             Comprehensive Financial Solutions
                         </h1>
-                        <p className="text-primary-foreground/80 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed">
+                        <p className="text-primary-foreground/80 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed mb-10">
                             From protecting your family to growing your wealth — a complete range of financial services tailored to your unique needs.
                         </p>
+
+                        {/* Service Navigation Tabs */}
+                        <div className="flex flex-wrap justify-center gap-3 md:gap-4">
+                            {serviceNav.map((tab) => (
+                                <Link
+                                    key={tab.name}
+                                    to={tab.href}
+                                    onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+                                    className={`
+                                        inline-flex items-center gap-2.5 px-6 py-3 md:px-8 md:py-3.5 rounded-full text-base md:text-lg font-semibold
+                                        transition-all duration-300 border-2
+                                        ${tab.active
+                                            ? "bg-primary-foreground text-primary border-primary-foreground shadow-lg shadow-primary-foreground/25 scale-105"
+                                            : "bg-primary-foreground/10 text-primary-foreground border-primary-foreground/30 hover:bg-primary-foreground/20 hover:border-primary-foreground/50 hover:scale-105"
+                                        }
+                                    `}
+                                >
+                                    <tab.icon className="w-4 h-4 md:w-5 md:h-5" />
+                                    {tab.name}
+                                </Link>
+                            ))}
+                        </div>
                     </div>
                 </section>
 
