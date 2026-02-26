@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Globe } from "lucide-react";
 
 interface Language {
@@ -20,16 +20,19 @@ declare global {
     }
 }
 
+// Module-level flag to ensure Google Translate is only loaded once,
+// even if multiple LanguageSelector instances are mounted.
+let googleTranslateLoaded = false;
+
 const LanguageSelector = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [currentLang, setCurrentLang] = useState("en");
     const dropdownRef = useRef<HTMLDivElement>(null);
-    const initialized = useRef(false);
 
-    // Load Google Translate script once
+    // Load Google Translate script once (module-level singleton)
     useEffect(() => {
-        if (initialized.current) return;
-        initialized.current = true;
+        if (googleTranslateLoaded) return;
+        googleTranslateLoaded = true;
 
         // Hidden container for Google Translate widget
         const container = document.createElement("div");
@@ -53,16 +56,11 @@ const LanguageSelector = () => {
             "//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
         script.async = true;
         document.body.appendChild(script);
-
-        return () => {
-            // Cleanup is intentionally minimal as Google Translate
-            // modifies the DOM globally
-        };
     }, []);
 
-    // Close dropdown on outside click
+    // Close dropdown on outside click/touch
     useEffect(() => {
-        const handleClickOutside = (e: MouseEvent) => {
+        const handleOutside = (e: MouseEvent | TouchEvent) => {
             if (
                 dropdownRef.current &&
                 !dropdownRef.current.contains(e.target as Node)
@@ -70,11 +68,23 @@ const LanguageSelector = () => {
                 setIsOpen(false);
             }
         };
-        document.addEventListener("mousedown", handleClickOutside);
-        return () => document.removeEventListener("mousedown", handleClickOutside);
+        document.addEventListener("mousedown", handleOutside);
+        document.addEventListener("touchstart", handleOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleOutside);
+            document.removeEventListener("touchstart", handleOutside);
+        };
     }, []);
 
-    const switchLanguage = (langCode: string) => {
+    // Sync current language from Google Translate cookie on mount
+    useEffect(() => {
+        const match = document.cookie.match(/googtrans=\/en\/(\w+)/);
+        if (match && match[1]) {
+            setCurrentLang(match[1]);
+        }
+    }, []);
+
+    const switchLanguage = useCallback((langCode: string) => {
         setCurrentLang(langCode);
         setIsOpen(false);
 
@@ -82,11 +92,27 @@ const LanguageSelector = () => {
         const selectEl = document.querySelector(
             ".goog-te-combo"
         ) as HTMLSelectElement | null;
+
         if (selectEl) {
             selectEl.value = langCode;
             selectEl.dispatchEvent(new Event("change"));
+        } else {
+            // If the Google Translate widget hasn't fully loaded yet,
+            // retry after a short delay
+            const retryInterval = setInterval(() => {
+                const retryEl = document.querySelector(
+                    ".goog-te-combo"
+                ) as HTMLSelectElement | null;
+                if (retryEl) {
+                    retryEl.value = langCode;
+                    retryEl.dispatchEvent(new Event("change"));
+                    clearInterval(retryInterval);
+                }
+            }, 200);
+            // Stop retrying after 3 seconds
+            setTimeout(() => clearInterval(retryInterval), 3000);
         }
-    };
+    }, []);
 
     const currentLanguage =
         languages.find((l) => l.code === currentLang) || languages[0];
@@ -95,12 +121,16 @@ const LanguageSelector = () => {
         <div className="relative" ref={dropdownRef}>
             <button
                 onClick={() => setIsOpen(!isOpen)}
+                onTouchEnd={(e) => {
+                    e.preventDefault();
+                    setIsOpen((prev) => !prev);
+                }}
                 className="flex items-center gap-1.5 px-2.5 py-1.5 text-sm font-medium text-muted-foreground hover:text-primary transition-colors rounded-lg hover:bg-muted"
                 aria-label="Select language"
                 id="language-selector-toggle"
             >
                 <Globe className="w-4 h-4" />
-                <span className="hidden sm:inline">{currentLanguage.nativeLabel}</span>
+                <span>{currentLanguage.nativeLabel}</span>
                 <svg
                     className={`w-3 h-3 transition-transform ${isOpen ? "rotate-180" : ""}`}
                     fill="none"
@@ -122,9 +152,13 @@ const LanguageSelector = () => {
                         <button
                             key={lang.code}
                             onClick={() => switchLanguage(lang.code)}
+                            onTouchEnd={(e) => {
+                                e.preventDefault();
+                                switchLanguage(lang.code);
+                            }}
                             className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm transition-colors text-left ${currentLang === lang.code
-                                    ? "bg-primary/10 text-primary font-semibold"
-                                    : "text-foreground hover:bg-muted"
+                                ? "bg-primary/10 text-primary font-semibold"
+                                : "text-foreground hover:bg-muted"
                                 }`}
                             id={`lang-option-${lang.code}`}
                         >
